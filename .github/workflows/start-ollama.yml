@@ -1,0 +1,32 @@
+name: Launch Ollama with Cloudflare Tunnel
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_name:
+        description: 'Ollama model name to pull (e.g., llama3, mistral)'
+        required: true
+        default: 'llama3'
+
+jobs:
+  ollama-tunnel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama Server
+        run: |
+          ollama serve & 
+          sleep 10 # Give it a moment to initialize
+
+      - name: Pull Model
+        run: ollama pull ${{ github.event.inputs.model_name }}
+
+      - name: Install Cloudflare & Start Tunnel
+        run: |
+          curl -L --output cloudflared.deb https://github.com
+          sudo dpkg -i cloudflared.deb
+          echo "--- CLOUDFLARE TUNNEL URL ---"
+          cloudflared tunnel --url http://localhost:11434
