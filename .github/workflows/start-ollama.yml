@@ -26,7 +26,7 @@ jobs:
 
       - name: Install Cloudflare & Start Tunnel
         run: |
-          curl -L --output cloudflared.deb https://github.com
+          curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/download/2026.3.0/cloudflared-fips-linux-amd64.deb
           sudo dpkg -i cloudflared.deb
           echo "--- CLOUDFLARE TUNNEL URL ---"
           cloudflared tunnel --url http://localhost:11434
